@@ -13,6 +13,7 @@
         @yield('content')
 
         <!-- Scripts -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         @stack('scripts')
         @yield('js_content')
 

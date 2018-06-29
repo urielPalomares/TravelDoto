@@ -7,14 +7,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Excel;
+use App\Vuelo;
 
 class ImportarController extends Controller
 {
-    public function index(){
-    	return view("importar.index");
+    public function import_vuelo(){
+    	$msj = "";
+    	return view('importar.index', ['msj' => $msj]);
     }
 
-     public function cargar_datos(Request $request)
+     public function cargar_datos_vuelo(Request $request)
 	{
        $archivo = $request->file('archivo');
        $nombre_original=$archivo->getClientOriginalName();
@@ -22,41 +24,37 @@ class ImportarController extends Controller
        $r1=Storage::disk('archivos')->put($nombre_original,  \File::get($archivo) );
        $ruta  =  storage_path('archivos') ."/". $nombre_original;
 
-       dd($ruta);
-       
        if($r1){
        	    $ct=0;
             Excel::selectSheetsByIndex(0)->load($ruta, function($hoja) {
-		        
 		        $hoja->each(function($fila) {
-		        	dd($fila);
-			        $usersemails=User::where("email","=",$fila->email)->first();
-			        if(count( $usersemails)==0){
-				      	$usuario=new User;
-				        $usuario->nombres= $fila->nombres;
-				        $usuario->apellidos= $fila->apellidos;
-				        $usuario->email= $fila->email;
-				        $usuario->telefono= $fila->telefono; //este campo llamado telefono se debe agregar en la base de datos c
-				        $usuario->pais= $fila->pais;
-				        $usuario->ciudad= $fila->ciudad;
-				        $usuario->institucion= $fila->institucion;
-		                $usuario->ocupacion= $fila->ocupacion;
-		                $usuario->password= bcrypt($fila->password);
-		                $usuario->save();
+		        	if($fila->origen != null && $fila->hora_despegue != null && $fila->hora_aterrizaje != null && $fila->aerolinea != null && $fila->clase != null && $fila->tiempo_total_vuelo != null && $fila->cantidad_escalas != null){
+				      	$vuelo =new Vuelo;
+				        $vuelo->origen = $fila->origen;
+				        $vuelo->destino = $fila->destino;
+				        $vuelo->hora_despegue = $fila->hora_despegue;
+				        $vuelo->hora_aterrizaje = $fila->hora_aterrizaje;
+				        $vuelo->tiempo_total_vuelo = $fila->tiempo_total_vuelo;
+				        $vuelo->aerolinea= $fila->aerolinea;
+				        $vuelo->clase = $fila->clase;
+				        $vuelo->cantidad_escalas = $fila->cantidad_escalas;
+		                $vuelo->save();
 	                }
 		     
 		        });
 
             });
-
-            return view("mensajes.msj_correcto")->with("msj"," Usuarios Cargados Correctamente");
-    	
+            $msj =  1;
        }
-       else
-       {
-       	    return view("mensajes.msj_rechazado")->with("msj","Error al subir el archivo");
+       else{
+       	    $msj = 0;
        }
+       return view('importar.index', ['success' => $msj]);
 
 	}
+
+	public function import_hotel(){
+    	return view('importar.index_hotel', ['success' => 1]);
+    }
 
 }

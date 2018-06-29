@@ -15,8 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//Listado
+Route::get('/listado', 'GeneralController@list');
+
+//Cotizador
 Route::get('/cotizador', 'CotizadorController@index');
 
+//Importar Vuelos
+Route::get('/importar_vuelos', 'ImportarController@import_vuelo');
+Route::post('cargar_datos_vuelo', 'ImportarController@cargar_datos_vuelo');
 
-Route::get('/importar', 'ImportarController@index');
-Route::post('cargar_datos', 'ImportarController@cargar_datos');
+//Importar Hoteles
+Route::get('/importar_hoteles', 'ImportarController@import_hotel');
+
