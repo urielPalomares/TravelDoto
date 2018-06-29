@@ -1,0 +1,3 @@
+"Column Name","Data Type","Nullable","Default","Primary Key"
+"id_tipo","VARCHAR2(255)","Yes","",""
+"Tipo bebida","VARCHAR2(255)","Yes","",""
