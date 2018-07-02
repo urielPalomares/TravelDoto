@@ -20,7 +20,7 @@ class ImportarController extends Controller
 	{
        $archivo = $request->file('archivo');
        $nombre_original=$archivo->getClientOriginalName();
-	   $extension=$archivo->getClientOriginalExtension();
+	     $extension=$archivo->getClientOriginalExtension();
        $r1=Storage::disk('archivos')->put($nombre_original,  \File::get($archivo) );
        $ruta  =  storage_path('archivos') ."/". $nombre_original;
 
@@ -38,8 +38,9 @@ class ImportarController extends Controller
 				        $vuelo->aerolinea= $fila->aerolinea;
 				        $vuelo->clase = $fila->clase;
 				        $vuelo->cantidad_escalas = $fila->cantidad_escalas;
-		                $vuelo->save();
-	                }
+                $vuelo->costo = $fila->costo;
+                $vuelo->save();
+              }
 		     
 		        });
 

@@ -23,6 +23,7 @@ class CreateVuelosTable extends Migration
             $table->string('aerolinea');
             $table->string('clase');
             $table->string('tiempo_total_vuelo');
+            $table->integer('costo');
             $table->timestamps();
         });
     }
