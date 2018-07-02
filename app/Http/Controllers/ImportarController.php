@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Excel;
 use App\Vuelo;
+use App\Hotel;
 
 class ImportarController extends Controller
 {
@@ -16,8 +17,8 @@ class ImportarController extends Controller
     	return view('importar.index', ['msj' => $msj]);
     }
 
-     public function cargar_datos_vuelo(Request $request)
-	{
+    public function cargar_datos_vuelo(Request $request)
+    {
        $archivo = $request->file('archivo');
        $nombre_original=$archivo->getClientOriginalName();
 	     $extension=$archivo->getClientOriginalExtension();
@@ -55,7 +56,37 @@ class ImportarController extends Controller
 	}
 
 	public function import_hotel(){
-    	return view('importar.index_hotel', ['success' => 1]);
-    }
+    return view('importar.index_hotel', ['success' => 1]);
+  }
+
+  public function cargar_datos_hotel(Request $request)
+    {
+       $archivo = $request->file('archivo');
+       $nombre_original=$archivo->getClientOriginalName();
+       $extension=$archivo->getClientOriginalExtension();
+       $r1=Storage::disk('archivos')->put($nombre_original,  \File::get($archivo) );
+       $ruta  =  storage_path('archivos') ."/". $nombre_original;
+
+       if($r1){
+            $ct=0;
+            Excel::selectSheetsByIndex(0)->load($ruta, function($hoja) {
+              $hoja->each(function($fila) {
+                if($fila->nombre != null && $fila->estrellas != null && $fila->direccion != null && $fila->ubicacion != null){
+                  $hotel =new Hotel;
+                  $hotel->nombre = $fila->nombre;
+                  $hotel->estrellas = $fila->estrellas;
+                  $hotel->direccion = $fila->direccion;
+                  $hotel->ubicacion = $fila->ubicacion;
+                  $hotel->save();
+                }         
+              });
+            });
+            $msj =  1;
+       }
+       else{
+            $msj = 0;
+       }
+       return redirect()->action('GeneralController@list');
+  }
 
 }

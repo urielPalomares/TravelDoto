@@ -27,4 +27,5 @@ Route::post('cargar_datos_vuelo', 'ImportarController@cargar_datos_vuelo');
 
 //Importar Hoteles
 Route::get('/importar_hoteles', 'ImportarController@import_hotel');
+Route::post('cargar_datos_hotel', 'ImportarController@cargar_datos_hotel');
 

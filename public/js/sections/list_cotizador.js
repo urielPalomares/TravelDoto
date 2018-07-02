@@ -24,7 +24,6 @@ new Vue({
       });
     },
     lastPage: function(nom_page){
-      console.log(nom_page);
       this.url = this.config.path + "?page=" + nom_page;
       axios.get(this.url)
         .then( (response) => {
@@ -33,7 +32,6 @@ new Vue({
       });
     },
     nextPage: function(nom_page){
-      console.log(nom_page);
       this.url = this.config.path + "?page=" + nom_page;
       axios.get(this.url)
         .then( (response) => {
@@ -47,9 +45,6 @@ new Vue({
           this.vuelo = response.data.vuelo;
           this.hotel = response.data.hotel;
           this.totales = response.data.cotizacion;
-          console.log(this.vuelo);
-          console.log(this.hotel);
-          console.log(this.totales);
           document.getElementById('myModal').style.display='block'
       });
     }
