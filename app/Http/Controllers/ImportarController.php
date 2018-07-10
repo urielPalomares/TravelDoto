@@ -51,7 +51,7 @@ class ImportarController extends Controller
        else{
        	    $msj = 0;
        }
-       return view('importar.index', ['success' => $msj]);
+       return redirect()->action('GeneralController@list');
 
 	}
 
